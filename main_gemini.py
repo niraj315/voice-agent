@@ -1,4 +1,5 @@
-import wave
+import os
+from dotenv import load_dotenv
 import speech_recognition as sr
 from openai import OpenAI
 from google import genai
@@ -6,7 +7,9 @@ from google.genai import types
 import sounddevice  as sd
 import numpy as np
 
-GOOGLE_API_KEY=""
+load_dotenv()
+GOOGLE_API_KEY=os.getenv("GOOGLE_API_KEY")
+
 client = OpenAI(
     api_key = GOOGLE_API_KEY,
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
@@ -18,7 +21,7 @@ gemini_client = genai.Client(
 
 
 #tts with gemini
-def tts(speech:str):
+def tts(speech:str): #Function for Text to Speech
     print("in tts function...")
 
     stream = sd.OutputStream(samplerate=24000, channels=1,dtype=np.int16) #Used stream for faster audio outout
@@ -46,7 +49,7 @@ def tts(speech:str):
     stream.stop()
     stream.close()
 
-def stt():
+def stt():  #Function for Speech to Text
     r= sr.Recognizer() # Will convert audio to text(STT)
 
     with sr.Microphone() as source: #Mic Access
